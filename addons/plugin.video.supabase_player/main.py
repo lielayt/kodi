@@ -103,7 +103,18 @@ def list_items(category_id):
         xbmcplugin.endOfDirectory(handle, succeeded=False)
         return
 
-    for item in data:
+    def sort_key(item):
+        name = item.get('name', f"Item {item.get('id', '?')}")
+        # Determine if first char is Hebrew
+        first_char = name[0]
+        is_hebrew = '\u0590' <= first_char <= '\u05FF'
+        # Tuple: (0 for Latin, 1 for Hebrew, lowercase name)
+        return (1 if is_hebrew else 0, name.lower())
+
+    # Sort data
+    data_sorted = sorted(data, key=sort_key)
+
+    for item in data_sorted:
         item_type = item.get('type', 'movie')
         action = "play_movie" if item_type == "movie" else "list_seasons"
         url = f"{sys.argv[0]}?action={action}&item_id={item.get('id')}"
@@ -112,9 +123,10 @@ def list_items(category_id):
         li.setArt({'thumb': item.get('image_url', ''), 'poster': item.get('image_url', '')})
         li.setInfo('video', {'title': label, 'mediatype': 'movie' if item_type=="movie" else 'tvshow'})
         xbmcplugin.addDirectoryItem(handle=handle, url=url, listitem=li, isFolder=(item_type=="show"))
-    
+
     xbmcplugin.setContent(handle, 'movies')
     xbmcplugin.endOfDirectory(handle)
+
 
 def list_seasons(item_id):
     log(f"Listing seasons for show: {item_id}")
