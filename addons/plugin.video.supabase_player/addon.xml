@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addon id="plugin.video.supabase_player"
+       name="Supabase Player"
+       version="1.0.0"
+       provider-name="You">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="main.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en">Streams movies and shows from Supabase</summary>
+        <description lang="en">Browse categories, movies, shows, seasons, and episodes from Supabase and play MKV files directly.</description>
+        <platform>all</platform>
+        <license>MIT</license>
+    </extension>
+</addon>
